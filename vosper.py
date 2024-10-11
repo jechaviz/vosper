@@ -1,26 +1,11 @@
-# VOSK + Whisper speech recognition system
-'''This module utilizes vosk as user feedback as wel as VAD solution
-    While it uses OpenAI whisper for actual transcription.'''
-
-# libraries
 import os, pyaudio, whisper, recorder
 from vosk import SetLogLevel, Model, KaldiRecognizer
 
 SetLogLevel(-1)  # mutes vosk verbosity
-os.system('clear')
-welcome_msg = '''\ \ / / _ \/ __| '_ \ / _ \ '__|
- \ V / (_) \__ \ |_) |  __/ |   
-  \_/ \___/|___/ .__/ \___|_|   
-               |_|  
-                     by appvoid
-'''
 
-
-# debugging purposes
 def log(msg, verbosity):
   if verbosity:
     print(msg)
-
 
 class new:
   def load_vosk(self, model='small'):
@@ -31,12 +16,6 @@ class new:
 
   def stream(self):
     mic = pyaudio.PyAudio()
-    # microphone streaming
-
-    '''this code is setting up an audio stream that 
-        will capture mono audio at a sample rate of 16000 Hz 
-        with 16-bit integer samples. It will capture audio 
-        in chunks of 4096 samples at a time.'''
 
     _stream = mic.open(
       channels=1,
@@ -46,7 +25,6 @@ class new:
       frames_per_buffer=4096
     )
     _stream.start_stream()
-    os.system('clear')
     return _stream
 
   def __init__(self, vosk_model='small', whisper_model='small.en', waiting_time=4, filename='speaker', verbosity=True):
@@ -59,7 +37,6 @@ class new:
     self.filename = filename
     self.mic = self.stream()
 
-    log(welcome_msg, self.verbosity)
     log(
       f'- waiting time:   {waiting_time} seconds\n- vosk model:     {vosk_model}\n- whisper model:  {whisper_model}\n- recording file: {filename}',
       self.verbosity)
@@ -89,7 +66,7 @@ class new:
         # we save 5 seconds of audio for whisper to transcribe
         self.recorder.record(5)
 
-    # it's a simple but quite unbreakable spell
+    # it's a simple but quite unbreakable spell 
     # for text checking to avoid printing empty strings
     if text != '-' and text != '- ':
       return text
