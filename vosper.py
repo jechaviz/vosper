@@ -19,7 +19,7 @@ class VosperRecognizer:
         self.verbosity = verbosity
         self.log('- loading models...')
         self.recorder = recorder.AudioRecorder(waiting_time, filename='speaker')
-        self.whisper = whisper.load_model(whisper_model)
+        self.whisper = whisper.load_model(whisper_model, fp16=False)
         self.vosk = self._load_vosk(vosk_model)
         self.recording_whisper = False
         self.filename = filename
