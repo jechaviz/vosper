@@ -1,17 +1,7 @@
-import vosper
-import os
+# vosper: a simple tool to easily get high-quality Automatic Speech Recognition using SOTA models
+import vosper, os; vosper = vosper.new()
 
-def main():
-    recognizer = vosper.VosperRecognizer()
-
-    while True:
-        text = recognizer.listen()
-        if text is not None:
-            if text:
-                os.system('cls' if os.name == 'nt' else 'clear')
-                print(f'- {text}')
-            else:
-                print("Silencio detectado...")
-
-if __name__ == "__main__":
-    main()
+while 'listening':
+    text = vosper.listen()
+    if ('-' in text): print(text)
+    elif (text != ''): os.system('clear'); print('- '+ text)
