@@ -7,13 +7,6 @@ from vosk import SetLogLevel, Model, KaldiRecognizer
 SetLogLevel(-1)
 os.system('clear')
 
-WELCOME_MSG = r'''\ \ / / _ \/ __| '_ \ / _ \ '__|
- \ V / (_) \__ \ |_) |  __/ |   
-  \_/ \___/|___/ .__/ \___|_|   
-               |_|  
-                     by appvoid
-'''
-
 class VosperRecognizer:
     def __init__(self, vosk_model='small', whisper_model='small.en', waiting_time=4, filename='speaker', verbosity=True):
         self.verbosity = verbosity
@@ -25,7 +18,6 @@ class VosperRecognizer:
         self.filename = filename
         self.mic = self._stream()
 
-        self.log(WELCOME_MSG)
         self.log(f'- waiting time:   {waiting_time} seconds\n- vosk model:     {vosk_model}\n- whisper model:  {whisper_model}\n- recording file: {filename}')
 
     def _load_vosk(self, model='small'):
