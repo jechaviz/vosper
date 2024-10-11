@@ -8,13 +8,15 @@ def log(msg, verbosity):
     print(msg)
 
 class new:
-  def load_vosk(self, model='small'):
+  @staticmethod
+  def load_vosk(model='small'):
     # load vosk model
     model_voice = Model(f'{os.getcwd()}/models/vosk/{model}')
     recognizer = KaldiRecognizer(model_voice, 16000)
     return recognizer
 
-  def stream(self):
+  @staticmethod
+  def stream():
     mic = pyaudio.PyAudio()
 
     _stream = mic.open(
@@ -52,14 +54,14 @@ class new:
       text = self.vosk.Result()[14:-3]
       # we also check if the input does worth the whisper gpu compute
       characters_threshold = 3
-      if (len(text) > characters_threshold):
+      if len(text) > characters_threshold:
         text = self.whisper.transcribe(f'{self.filename}.wav')['text'].strip()
       # we turn off whisper recognition variable
       self.recording_whisper = False
 
     else:  # else, we show vosk text instead
       text = self.vosk.PartialResult()[17:-3]
-      if (self.recording_whisper == False):
+      if not self.recording_whisper:
         self.recorder.stop()
         # we turn whisper on available for recording
         self.recording_whisper = True
