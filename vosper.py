@@ -3,9 +3,10 @@ import pyaudio
 import whisper
 import recorder
 from vosk import SetLogLevel, Model, KaldiRecognizer
+import time
 
 SetLogLevel(-1)
-os.system('clear')
+os.system('cls' if os.name == 'nt' else 'clear')
 
 class VosperRecognizer:
     def __init__(self, vosk_model='small', whisper_model='small.en', waiting_time=4, filename='speaker', verbosity=True):
@@ -17,6 +18,8 @@ class VosperRecognizer:
         self.recording_whisper = False
         self.filename = filename
         self.mic = self._stream()
+        self.silence_start = None
+        self.silence_threshold = 1.0  # segundos
 
         self.log(f'- waiting time:   {waiting_time} seconds\n- vosk model:     {vosk_model}\n- whisper model:  {whisper_model}\n- recording file: {filename}')
 
@@ -34,7 +37,7 @@ class VosperRecognizer:
             frames_per_buffer=4096
         )
         _stream.start_stream()
-        os.system('clear')
+        os.system('cls' if os.name == 'nt' else 'clear')
         return _stream
 
     def log(self, msg):
@@ -48,13 +51,23 @@ class VosperRecognizer:
             self.recorder.stop()
             text = self.vosk.Result()[14:-3]
             if len(text) > 3:
-                text = self.whisper.transcribe(f'{self.filename}.wav')['text'].strip()
+                text = self.whisper.transcribe(f'{self.filename}.wav', language="es", task="transcribe")['text'].strip()
             self.recording_whisper = False
+            self.silence_start = None
+            return text
         else:
-            text = self.vosk.PartialResult()[17:-3]
-            if not self.recording_whisper:
-                self.recorder.stop()
-                self.recording_whisper = True
-                self.recorder.record(5)
+            partial_text = self.vosk.PartialResult()[17:-3]
+            if partial_text:
+                self.silence_start = None
+                if not self.recording_whisper:
+                    self.recorder.stop()
+                    self.recording_whisper = True
+                    self.recorder.record(5)
+            elif self.silence_start is None:
+                self.silence_start = time.time()
+            elif time.time() - self.silence_start > self.silence_threshold:
+                self.recording_whisper = False
+                self.silence_start = None
+                return ''
         
-        return text if text not in ['-', '- '] else ''
+        return None

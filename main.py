@@ -6,11 +6,12 @@ def main():
 
     while True:
         text = recognizer.listen()
-        if '-' in text:
-            print(text)
-        elif text:
-            os.system('cls')
-            print(f'- {text}')
+        if text is not None:
+            if text:
+                os.system('cls' if os.name == 'nt' else 'clear')
+                print(f'- {text}')
+            else:
+                print("Silencio detectado...")
 
 if __name__ == "__main__":
     main()
