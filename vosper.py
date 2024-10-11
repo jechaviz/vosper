@@ -7,7 +7,7 @@ from vosk import SetLogLevel, Model, KaldiRecognizer
 SetLogLevel(-1)
 os.system('clear')
 
-WELCOME_MSG = '''\ \ / / _ \/ __| '_ \ / _ \ '__|
+WELCOME_MSG = r'''\ \ / / _ \/ __| '_ \ / _ \ '__|
  \ V / (_) \__ \ |_) |  __/ |   
   \_/ \___/|___/ .__/ \___|_|   
                |_|  
